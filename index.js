@@ -4,54 +4,62 @@ const cors = require('cors');
 var floor_one = require('./floor_one');
 var floor_two = require('./floor_two');
 
-
+const port = 3000
 
 bodyParser = require('body-parser');
-
 app.use(bodyParser.json());
 
-var floor_one_rooms = {
-  12345: "pineapple",
-  6789: "cake",
-  2763145: "biscuit",
-  217814684: "cupcake",
-  1233: "cookie",
-  12122: "pasta"
-}
-
-var floor_two_rooms = {
-  1357: "pizza",
-  2468: "rice",
-  3579: "curry"
-}
+var urlencodedParser = bodyParser.urlencoded({extended: false});
 
 var floors = {
-
   1: floor_one,
   2: floor_two
 }
 
 
-var urlencodedParser = bodyParser.urlencoded({extended: false});
-const port = 3000
+app.get('/floors/:floorId/:roomId', (req, res) => {
+  let floor = floors[req.params.floorId];
 
-app.get('/room/:roomId', (req, res) => res.send('You requested for a room!'));
+  let room = floor.filter(room => {
+    return room.id == req.params.roomId;
+  })[0];
 
-app.get('/rooms/:floorId', (req, res) => {
+  res.json(room);
+}
+);
+
+app.get('/floors/:floorId', (req, res) => {
   const floorid = req.params.floorId;
 
   res.json(floors[floorid]);
 });
 
 
-app.post('/event', urlencodedParser, (req, res) => {
+app.put('/event/:floorId/:roomId', urlencodedParser, (req, res) => {
 
-var name = floor_one_rooms[req.body.roomId];
+let floor = floors[req.params.floorId];
+
+let room = floor.filter(room => {
+  return room.id == req.params.roomId;
+})[0];
+
+const index = floor.indexOf(room);
 
 
-res.send('Your room name: ' +
-floor_one_rooms[req.body.roomId] + '\nYour start time: ' + req.body.startTime + '\nYour time duration: '
-+ req.body.time + '\nYour floor busy schedule: ' + floor_one[name].busy)});
+if (!room.busy) {
+  room.busy = true;
+} else {
+  res.status(400);
+  res.send('Sorry, this room is busy during that timeslot');
+  return;
+}
+
+floors[req.params.floorId][index] = room;
+
+res.status(200);
+res.send('Your room has been booked.');
+
+});
 
 
 
