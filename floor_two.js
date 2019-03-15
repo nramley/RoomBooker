@@ -7,31 +7,19 @@ const rooms = [
   },
 
   {
-    "name": "cake",
+    "name": "pizza",
     "capacity": 5,
     "busy": false
   },
 
   {
-    "name":"biscuit",
+    "name":"rice",
     "capacity": 5,
     "busy": true
   },
 
   {
-    "name": "cupcake",
-    "capacity": 5,
-    "busy": false
-  },
-
-  {
-    "name": "cookie",
-    "capacity": 5,
-    "busy": true
-  },
-
-  {
-    "name": "pasta",
+    "name": "curry",
     "capacity": 5,
     "busy": false
   }
