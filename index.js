@@ -4,7 +4,8 @@ const cors = require('cors');
 var floor_one = require('./floor_one');
 var floor_two = require('./floor_two');
 
-const port = 3000
+var port = process.env.PORT || '3000';
+app.set('port', port);
 
 bodyParser = require('body-parser');
 app.use(bodyParser.json());
